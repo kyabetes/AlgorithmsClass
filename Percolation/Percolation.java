@@ -27,37 +27,37 @@ public class Percolation {
     public void open(int row, int col) {
         validateIndices(row, col);
         if (!isOpen(row, col)) {
-            grid[row - 1][col - 1] = true;
+            grid[row][col] = true;
             openSites++;
 
             int index = getIndex(row, col);
 
             // connect to open neighbors
-            if (row > 1 && isOpen(row - 1, col)) {
+            if (row > 0 && isOpen(row - 1, col)) {
                 uf.union(index, getIndex(row - 1, col));
                 ufFullness.union(index, getIndex(row - 1, col));
             }
-            if (row < n && isOpen(row + 1, col)) {
+            if (row < n - 1 && isOpen(row + 1, col)) {
                 uf.union(index, getIndex(row + 1, col));
                 ufFullness.union(index, getIndex(row + 1, col));
             }
-            if (col > 1 && isOpen(row, col - 1)) {
+            if (col > 0 && isOpen(row, col - 1)) {
                 uf.union(index, getIndex(row, col - 1));
                 ufFullness.union(index, getIndex(row, col - 1));
             }
-            if (col < n && isOpen(row, col + 1)) {
+            if (col < n - 1 && isOpen(row, col + 1)) {
                 uf.union(index, getIndex(row, col + 1));
                 ufFullness.union(index, getIndex(row, col + 1));
             }
 
             // connect to virtual top site if in top row
-            if (row == 1) {
+            if (row == 0) {
                 uf.union(index, top);
                 ufFullness.union(index, top);
             }
 
             // connect to virtual bottom site if in bottom row
-            if (row == n) {
+            if (row == n - 1) {
                 uf.union(index, bottom);
             }
         }
@@ -66,7 +66,7 @@ public class Percolation {
     // is the site (row, col) open?
     public boolean isOpen(int row, int col) {
         validateIndices(row, col);
-        return grid[row - 1][col - 1];
+        return grid[row][col];
     }
 
     // is the site (row, col) full?
@@ -87,22 +87,22 @@ public class Percolation {
 
     // validate that i and j are valid indices
     private void validateIndices(int i, int j) {
-        if (i <= 0 || i > n || j <= 0 || j > n) {
+        if (i < 0 || i >= n || j < 0 || j >= n) {
             throw new IllegalArgumentException("Index out of bounds");
         }
     }
 
     // get the index in the UF data structure
     private int getIndex(int row, int col) {
-        return (row - 1) * n + (col - 1);
+        return row * n + col;
     }
 
     // unit testing
     public static void main(String[] args) {
         Percolation percolation = new Percolation(3);
-        System.out.println("Is (1,1) open? " + percolation.isOpen(1, 1));
-        percolation.open(1, 1);
-        System.out.println("Is (1,1) open? " + percolation.isOpen(1, 1));
+        System.out.println("Is (0,0) open? " + percolation.isOpen(0, 0));
+        percolation.open(0, 0);
+        System.out.println("Is (0,0) open? " + percolation.isOpen(0, 0));
         System.out.println("Number of open sites: " + percolation.numberOfOpenSites());
         System.out.println("Does the system percolate? " + percolation.percolates());
     }
