@@ -3,8 +3,7 @@ import edu.princeton.cs.algs4.StdStats;
 import edu.princeton.cs.algs4.Stopwatch;
 
 public class PercolationStats {
-    private static final double confidence_95 = 1.96;
-    // I am now grateful I took AP stats...
+    private static final double CONFIDENCE_95 = 1.96;
     private final double[] thresholds;
     private final int trials;
 
@@ -19,8 +18,8 @@ public class PercolationStats {
         for (int t = 0; t < trials; t++) {
             Percolation percolation = new Percolation(n);
             while (!percolation.percolates()) {
-                int row = StdRandom.uniformInt(1, n + 1);
-                int col = StdRandom.uniformInt(1, n + 1);
+                int row = StdRandom.uniform(n); // 0-based
+                int col = StdRandom.uniform(n); // 0-based
                 if (!percolation.isOpen(row, col)) {
                     percolation.open(row, col);
                 }
@@ -41,12 +40,12 @@ public class PercolationStats {
 
     // low endpoint of 95% confidence interval
     public double confidenceLow() {
-        return mean() - ((confidence_95 * stddev()) / Math.sqrt(trials));
+        return mean() - ((CONFIDENCE_95 * stddev()) / Math.sqrt(trials));
     }
 
     // high endpoint of 95% confidence interval
     public double confidenceHigh() {
-        return mean() + ((confidence_95 * stddev()) / Math.sqrt(trials));
+        return mean() + ((CONFIDENCE_95 * stddev()) / Math.sqrt(trials));
     }
 
     // test client (see below)
